@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Poll Platform with Images</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color:lightseagreen;
+            border:40px solid white
+        }
+
+        .container {
+            margin-top: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 30px;
+           color:rgb(241, 21, 190);
+           text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 30px;
+            color:silver
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            margin-top: 10px;
+            font-size:20;
+            color:white;
+        }
+
+        .poll {
+            border: 1px solid gold;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .poll-question {
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 30px;
+            color: aqua;
+            
+        }
+
+        .poll-option {
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            color:mediumseagreen
+    
+
+        }
+
+        .poll-results {
+            margin-top: 10px;
+        }
+
+        .poll-image {
+            max-width: 200px;
+            max-height: 200px;
+            display: block;
+            margin: 0 auto;
+            
+            
+        }
+
+        .poll-question-image {
+            max-width: 200px;
+            max-height: 200px;
+            display: block;
+            margin-bottom: 10px;
+
+        }
+
+        #countdown {
+            font-size: 20px;
+            color: red;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1> A.P Election Poll Platform </h1>
+    
+    <div id="pollList">
+        <h2>Active Polls</h2>
+        <div id="countdown">Time remaining: <span id="time"></span></div>
+        <div id="pollsContainer"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const pollList = document.getElementById('pollsContainer');
+        let pollEndTime = new Date().getTime() + 60000; 
+
+        const predefinedPolls = [
+            {
+                id: new Date().getTime() + 1,
+                question: 'Who should be the next CM?',
+                options: [
+                    { text: 'ys.jagan', image: 'https://pbs.twimg.com/profile_images/1613166539775299591/jGFXbzd__400x400.jpg' }, 
+                    { text: 'pawan', image: 'https://1847884116.rsc.cdn77.org/telugu/home/pawan-kalyan-080424-2.jpg' }, 
+                    { text: 'CBN', image: 'https://pbs.twimg.com/profile_images/1661933747271524352/RpQ2zGnQ_400x400.jpg' }, 
+                    { text: 'Sharmila', image: 'https://www.hindustantimes.com/ht-img/img/2024/01/04/1600x900/YSR-Telangana-party-founder-YS-Sharmila---Facebook_1704348111797.jpg' }  
+                ],
+                votes: [0, 0, 0, 0]
+            },
+            {
+                id: new Date().getTime() + 2,
+                question: 'Who should be the next MLA?',
+                options: [
+                    { text: 'YSRCP', image: 'https://assets.hmtvlive.com/h-upload/2024/06/03/374956-kodali-nani.webp' }, 
+                    { text: 'TDP', image: 'https://cdn.siasat.com/wp-content/uploads/2023/09/Balakrishna.jpg' },
+                    { text: 'CONGRESS', image: 'https://s3.ap-southeast-1.amazonaws.com/images.deccanchronicle.com/dc-Cover-m9rrauvs83fjmbgnnrro0ne087-20230718001752.Medi.jpeg' }, 
+                    { text: 'JSP', image: 'https://theleaderspage.com/wp-content/uploads/2020/10/71578790_2409462559172027_5289153870272921600_n.jpg' }  
+                ],
+                votes: [0, 0, 0, 0]
+            },
+            {
+                id: new Date().getTime() + 3,
+                question: 'Who should be the next MP?',
+                options: [
+                    { text: 'JSP', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5-hRP0q5lPwr1TTkTh7fsoQANbqz363IAiQ&s' }, 
+                    { text: 'YSRCP', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw3Si7mLjA0o2BU4lAreBb0YaBr0EuYDFIvA&s' }, 
+                    { text: 'congress', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUsndUzS0r9SC7ADCWsRLu-RRntbA-5KtzJw&s' }, 
+                    { text: 'TDP', image: 'https://www.deccanchronicle.com/h-upload/2024/06/04/1094875-chandrasekharpemmasani.webp' }  
+                ],
+                votes: [0, 0, 0, 0]
+            },
+            {
+                id: new Date().getTime() + 4,
+                question: 'Who should be the next PM',
+                options: [
+                    { text: 'MODI', image: 'https://pbs.twimg.com/profile_images/1700051019525488640/VRqy0bTE_400x400.jpg' }, 
+                    { text: 'Rahul', image: 'https://www.jansatta.com/wp-content/uploads/2024/03/rahul-gandhi-guarantee.jpg?w=440' }, 
+                    { text: 'Mallikarjun', image: 'https://c.ndtvimg.com/2023-09/qf34f9u_mallikarjun-khadge-_625x300_07_September_23.jpg' }, 
+                    { text: 'Candidate', image: 'https://akm-img-a-in.tosshub.com/businesstoday/images/story/202406/665fc28fb065c-the-india-bloc-registered-a-stellar-win-in-maharashtra-054238646-16x9.jpg?size=948:533' }  
+                ],
+                votes: [0, 0, 0, 0]
+            }
+        ];
+
+        predefinedPolls.forEach(poll => {
+            localStorage.setItem(`poll-${poll.id}`, JSON.stringify(poll));
+        });
+
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const distance = pollEndTime - now;
+            
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('time').textContent = `${minutes}m ${seconds}s`;
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('time').textContent = "EXPIRED";
+                alert("Polling time has ended.");
+                showResults();
+            }
+        };
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+
+        const displayPoll = (poll) => {
+            const pollElement = document.createElement('div');
+            pollElement.classList.add('poll');
+            pollElement.dataset.pollId = poll.id;
+
+            const pollQuestion = document.createElement('div');
+            pollQuestion.classList.add('poll-question');
+            pollQuestion.textContent = poll.question;
+
+            pollElement.appendChild(pollQuestion);
+
+            poll.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('poll-option');
+
+                const imgElement = document.createElement('img');
+                imgElement.src = option.image;
+                imgElement.classList.add('poll-image');
+                optionElement.appendChild(imgElement);
+
+                const optionLabel = document.createElement('label');
+                optionLabel.textContent = `${option.text} (${poll.votes[index]} votes)`;
+                optionElement.appendChild(optionLabel);
+
+                const voteButton = document.createElement('button');
+                voteButton.classList.add('btn', 'btn-secondary', 'ml-2');
+                voteButton.textContent = 'Vote';
+                voteButton.onclick = () => vote(poll.id, index, optionLabel);
+                optionElement.appendChild(voteButton);
+
+                pollElement.appendChild(optionElement);
+            });
+
+            pollList.appendChild(pollElement);
+        };
+
+        const vote = (pollId, optionIndex, optionLabel) => {
+            const now = new Date().getTime();
+            if (now > pollEndTime) {
+                alert("Polling time has ended. Your vote will not be counted.");
+                return;
+            }
+
+            if (localStorage.getItem(`voted-${pollId}`)) {
+                alert("You have already voted in this poll.");
+                return;
+            }
+            
+            const poll = JSON.parse(localStorage.getItem(`poll-${pollId}`));
+            poll.votes[optionIndex]++;
+            localStorage.setItem(`poll-${pollId}`, JSON.stringify(poll));
+            localStorage.setItem(`voted-${pollId}`, true);
+            optionLabel.textContent = `${poll.options[optionIndex].text} (${poll.votes[optionIndex]} votes)`;
+        };
+
+        const showResults = () => {
+            predefinedPolls.forEach(poll => {
+                const pollElement = document.querySelector(`.poll[data-poll-id="${poll.id}"]`);
+                if (pollElement) {
+                    poll.options.forEach((option, index) => {
+                        const optionLabel = pollElement.querySelectorAll('.poll-option label')[index];
+                        const pollData = JSON.parse(localStorage.getItem(`poll-${poll.id}`));
+                        optionLabel.textContent = `${pollData.options[index].text} (${pollData.votes[index]} votes)`;
+                    });
+                }
+            });
+        };
+
+        predefinedPolls.forEach(poll => {
+            const initialPoll = JSON.parse(localStorage.getItem(`poll-${poll.id}`));
+            displayPoll(initialPoll);
+        });
+
+        updateCountdown();
+    });
+</script>
+</body>
+</html>
